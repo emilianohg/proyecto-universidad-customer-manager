@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class CustomerWindow extends JFrame {
 
-    JTextField inputRFC, inputName, inputYearsOld, inputCountryId;
+    JTextField inputRFC, inputName, inputAge, inputCountryId;
     JButton btnCreate, btnUpdate, btnShow, btnIndex, btnDelete;
 
     public CustomerWindow(String title) {
@@ -32,7 +32,7 @@ public class CustomerWindow extends JFrame {
 
         inputRFC        = new JTextField();
         inputName       = new JTextField();
-        inputYearsOld   = new JTextField();
+        inputAge        = new JTextField();
         inputCountryId  = new JTextField();
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -43,7 +43,7 @@ public class CustomerWindow extends JFrame {
         formPanel.add(inputName);
 
         formPanel.add(new JLabel("Edad:"));
-        formPanel.add(inputYearsOld);
+        formPanel.add(inputAge);
 
         formPanel.add(new JLabel("ID Ciudad:"));
         formPanel.add(inputCountryId);

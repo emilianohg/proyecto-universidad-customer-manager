@@ -1,0 +1,21 @@
+package domain;
+
+import junit.framework.TestCase;
+
+public class CustomerTest extends TestCase {
+
+    public void test_getters_customer () {
+        String  rfc         = "ABCD354356FDC";
+        String  name        = "Emiliano Hernandez";
+        Integer age         = 21;
+        Integer countryId   = 48;
+
+        Customer customer = new Customer(rfc, name, age, countryId);
+
+        assertEquals(rfc,       customer.getRFC());
+        assertEquals(name,      customer.getName());
+        assertEquals(age,       customer.getAge());
+        assertEquals(countryId, customer.getCountryId());
+    }
+
+}
