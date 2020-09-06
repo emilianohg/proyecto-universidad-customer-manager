@@ -1,6 +1,6 @@
 package storage;
 
-public class CustomerIndex {
+final public class CustomerIndex {
     final public String     rfc;
     final public Integer    index;
     final public Character  status;

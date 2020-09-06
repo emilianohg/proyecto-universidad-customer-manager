@@ -235,6 +235,65 @@ public class CustomerStorageHandlerTest extends TestCase {
         }
     }
 
+    public void test_update_customer () {
+
+        System.out.println("test_update_customer");
+
+        CustomerStorageHandler storage;
+
+        Customer[] customers = getArrayCustomers();
+        Customer customer3 = customers[2];
+
+        try {
+            storage = new CustomerStorageHandler();
+            storage.save(customers);
+
+            String name = "Usuario 3 modificado";
+            Customer customer3Modified = new Customer(customer3.getRFC(), name, customer3.getAge(), customer3.getCountryId());
+
+            if (!storage.update(customer3Modified))
+                fail("No se pudo actualizar el registro");
+
+            Customer customerFinded = storage.find(customer3.getRFC());
+
+            assertEquals(customerFinded.getName(), name);
+
+            storage.close();
+            storage.flush();
+        } catch (IOException e) {
+            System.out.println("No puedo acceder al archivo");
+            fail();
+        }
+
+    }
+
+    public void test_update_not_exist_customer () {
+
+        System.out.println("test_update_customer");
+
+        CustomerStorageHandler storage;
+
+        Customer[] customers = getArrayCustomers();
+        Customer customer3 = customers[2];
+
+        try {
+            storage = new CustomerStorageHandler();
+            storage.save(customers);
+
+            String name = "Usuario 3 modificado";
+            Customer customer3Modified = new Customer("NOTEXISTS", name, customer3.getAge(), customer3.getCountryId());
+
+            assertFalse(storage.update(customer3Modified));
+
+            storage.close();
+            storage.flush();
+        } catch (IOException e) {
+            System.out.println("No puedo acceder al archivo");
+            fail();
+        }
+
+    }
+
     private Customer[] getArrayCustomers () {
         Customer[] customers = {
                 new Customer("ABCD354356", "Emiliano Hernandez", 21, 34),

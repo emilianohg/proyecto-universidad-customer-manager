@@ -78,6 +78,19 @@ public class CustomerStorageHandler extends StorageHandler {
         return new Customer(customerIndex.rfc, name, age, countryId);
     }
 
+    public boolean update (Customer customer) {
+        try {
+            CustomerIndex customerIndex = indexStorageHandler.getByRFC(customer.getRFC());
+            file.seek(customerIndex.index * getRecordSize());
+            file.writeUTF(StringUtils.rightpad(customer.getName(), 40));
+            file.writeInt(customer.getAge());
+            file.writeInt(customer.getCountryId());
+            return true;
+        } catch (IOException | CustomerNotFoundException e) {
+            return false;
+        }
+    }
+
     public boolean close () {
         try {
             indexStorageHandler.close();
