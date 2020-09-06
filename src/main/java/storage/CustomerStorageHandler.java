@@ -26,12 +26,13 @@ public class CustomerStorageHandler extends StorageHandler {
 
     public boolean save (Customer customer) {
         try {
+            int index = totalRecords();
+
             file.seek(file.length());
             file.writeUTF(StringUtils.rightpad(customer.getName(), 40));
             file.writeInt(customer.getAge());
             file.writeInt(customer.getCountryId());
 
-            int index = totalRecords() - 1;
             return indexStorageHandler.save(customer, index);
 
         } catch (IOException e) {
@@ -39,15 +40,22 @@ public class CustomerStorageHandler extends StorageHandler {
         }
     }
 
-
-
     public Customer find (String rfc) throws IOException, CustomerNotFoundException {
-        long index = indexStorageHandler.getIndex(rfc);
-        file.seek(index * getRecordSize());
+        CustomerIndex customerIndex = indexStorageHandler.getByRFC(rfc);
+        return getCustomer(customerIndex);
+    }
+
+    public Customer find (long index) throws IOException, CustomerNotFoundException {
+        CustomerIndex customerIndex = indexStorageHandler.getByPosition(index);
+        return getCustomer(customerIndex);
+    }
+
+    private Customer getCustomer (CustomerIndex customerIndex) throws IOException {
+        file.seek(customerIndex.index * getRecordSize());
         String      name        = file.readUTF().trim();
         Integer     age         = file.readInt();
         Integer     countryId   = file.readInt();
-        return new Customer(rfc, name, age, countryId);
+        return new Customer(customerIndex.rfc, name, age, countryId);
     }
 
     public boolean close () {

@@ -7,18 +7,6 @@ import java.io.IOException;
 
 public class CustomerIndexStorageHandler extends StorageHandler{
 
-    private class CustomerIndex {
-        final public String     rfc;
-        final public Integer    index;
-        final public Character  status;
-
-        public CustomerIndex(String rfc, Integer index, Character status) {
-            this.rfc    = rfc;
-            this.index  = index;
-            this.status = status;
-        }
-    }
-
     public CustomerIndexStorageHandler(String filename) throws IOException {
         super(filename);
     }
@@ -46,18 +34,18 @@ public class CustomerIndexStorageHandler extends StorageHandler{
         return true;
     }
 
-    public Integer getIndex (String rfc) throws IOException, CustomerNotFoundException {
-        if (file.length() == 0)
+    public CustomerIndex getByRFC(String rfc) throws IOException, CustomerNotFoundException {
+        if (totalRecords() == 0)
             throw new CustomerNotFoundException();
 
         long position = 0;
-        CustomerIndex record = getRecordByPosition(position);
+        CustomerIndex record = getByPosition(position);
         while (!record.rfc.equals(rfc)) {
             if (position >= totalRecords() - 1)
                 throw new CustomerNotFoundException();
-            record = getRecordByPosition(++position);
+            record = getByPosition(++position);
         }
-        return record.index;
+        return record;
     }
 
     private void orderLastRecord () throws IOException {
@@ -70,15 +58,15 @@ public class CustomerIndexStorageHandler extends StorageHandler{
 
         while (position >= 1) {
 
-            CustomerIndex previusRecord = getRecordByPosition(position - 1);
-            CustomerIndex record = getRecordByPosition(position);
+            CustomerIndex previusRecord = getByPosition(position - 1);
+            CustomerIndex record = getByPosition(position);
 
             if (record.rfc.compareTo(record.rfc) > 0) {
                 return;
             }
 
-            setRecordByPosition(record, position - 1);
-            setRecordByPosition(previusRecord, position);
+            setByPosition(record, position - 1);
+            setByPosition(previusRecord, position);
 
             position--;
         }
@@ -86,14 +74,14 @@ public class CustomerIndexStorageHandler extends StorageHandler{
 
     }
 
-    private void setRecordByPosition (CustomerIndex customerIndex, long position) throws IOException {
+    private void setByPosition(CustomerIndex customerIndex, long position) throws IOException {
         file.seek(position * getRecordSize());
         file.writeUTF(customerIndex.rfc);
         file.writeInt(customerIndex.index);
         file.writeChar(customerIndex.status);
     }
 
-    private CustomerIndex getRecordByPosition (long position) throws IOException {
+    public CustomerIndex getByPosition(long position) throws IOException {
         file.seek(position * getRecordSize());
         String      rfc     = file.readUTF();
         Integer     index   = file.readInt();
