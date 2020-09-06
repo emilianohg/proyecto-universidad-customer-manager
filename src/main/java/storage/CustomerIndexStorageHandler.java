@@ -52,7 +52,7 @@ public class CustomerIndexStorageHandler extends StorageHandler{
             CustomerIndex previusRecord = getByPosition(position - 1);
             CustomerIndex record = getByPosition(position);
 
-            if (record.rfc.compareTo(record.rfc) > 0) {
+            if (record.rfc.compareTo(previusRecord.rfc) > 0) {
                 return;
             }
 

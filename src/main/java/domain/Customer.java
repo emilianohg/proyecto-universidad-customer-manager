@@ -47,6 +47,7 @@ final public class Customer {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", countryId=" + countryId +
+                ", status=" + status +
                 '}';
     }
 
