@@ -5,6 +5,7 @@ import utils.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class CustomerStorageHandler extends StorageHandler {
 
@@ -38,6 +39,25 @@ public class CustomerStorageHandler extends StorageHandler {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    public boolean save(Customer[] customers) {
+        int countCustomersSaved = 0;
+        for (Customer customer : customers) {
+            if (save(customer))
+                countCustomersSaved++;
+        }
+        return countCustomersSaved == customers.length;
+    }
+
+    public ArrayList<Customer> getAll () throws IOException {
+        ArrayList<Customer> customers = new ArrayList<>();
+        int position = 0;
+        while (position <= totalRecords() - 1) {
+            customers.add(find(position));
+            position++;
+        }
+        return customers;
     }
 
     public Customer find (String rfc) throws IOException, CustomerNotFoundException {
