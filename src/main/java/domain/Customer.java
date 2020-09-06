@@ -2,16 +2,22 @@ package domain;
 
 final public class Customer {
 
-    final private String  rfc;
-    final private String  name;
-    final private Integer age;
-    final private Integer countryId;
+    final private String    rfc;
+    final private String    name;
+    final private Integer   age;
+    final private Integer   countryId;
+    final private Character status;
 
-    public Customer (String rfc, String name, Integer age, Integer countryId) {
+    public Customer (String rfc, String name, Integer age, Integer countryId, Character status) {
         this.rfc        = rfc;
         this.name       = name;
         this.age        = age;
         this.countryId  = countryId;
+        this.status     = status;
+    }
+
+    public Customer (String rfc, String name, Integer age, Integer countryId) {
+        this(rfc, name, age, countryId, 'A');
     }
 
     public String getRFC () {
@@ -28,6 +34,10 @@ final public class Customer {
 
     public Integer getCountryId() {
         return countryId;
+    }
+
+    public boolean isDeleted () {
+        return status == 'E';
     }
 
     @Override

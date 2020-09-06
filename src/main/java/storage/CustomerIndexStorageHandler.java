@@ -25,7 +25,7 @@ public class CustomerIndexStorageHandler extends StorageHandler{
             file.seek(file.length());
             file.writeUTF(StringUtils.rightpad(customer.getRFC(), 10));
             file.writeInt(indexRegistered);
-            file.writeChar('a');
+            file.writeChar('A');
 
             orderLastRecord();
         } catch (IOException e) {
@@ -35,17 +35,8 @@ public class CustomerIndexStorageHandler extends StorageHandler{
     }
 
     public CustomerIndex getByRFC(String rfc) throws IOException, CustomerNotFoundException {
-        if (totalRecords() == 0)
-            throw new CustomerNotFoundException();
-
-        long position = 0;
-        CustomerIndex record = getByPosition(position);
-        while (!record.rfc.equals(rfc)) {
-            if (position >= totalRecords() - 1)
-                throw new CustomerNotFoundException();
-            record = getByPosition(++position);
-        }
-        return record;
+        long position = getPositionByRFC(rfc);
+        return getByPosition(position);
     }
 
     private void orderLastRecord () throws IOException {
@@ -72,6 +63,34 @@ public class CustomerIndexStorageHandler extends StorageHandler{
         }
 
 
+    }
+
+    public boolean deleteByRFC (String rfc) throws IOException {
+        long position;
+        try {
+            position = getPositionByRFC(rfc);
+        } catch (CustomerNotFoundException e) {
+            return true;
+        }
+        file.seek(position * getRecordSize());
+        file.readUTF();
+        file.readInt();
+        file.writeChar('E');
+        return true;
+    }
+
+    private long getPositionByRFC (String rfc) throws IOException, CustomerNotFoundException {
+        if (totalRecords() == 0)
+            throw new CustomerNotFoundException();
+
+        long position = 0;
+        CustomerIndex record = getByPosition(position);
+        while (!record.rfc.equals(rfc)) {
+            if (position >= totalRecords() - 1)
+                throw new CustomerNotFoundException();
+            record = getByPosition(++position);
+        }
+        return position;
     }
 
     private void setByPosition(CustomerIndex customerIndex, long position) throws IOException {

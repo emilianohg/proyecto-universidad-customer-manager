@@ -51,10 +51,20 @@ public class CustomerStorageHandler extends StorageHandler {
     }
 
     public ArrayList<Customer> getAll () throws IOException {
+        return getAll(true);
+    }
+
+    public ArrayList<Customer> getAll (boolean onlyActive) throws IOException {
         ArrayList<Customer> customers = new ArrayList<>();
         int position = 0;
         while (position <= totalRecords() - 1) {
-            customers.add(find(position));
+            Customer customer = find(position);
+            if (onlyActive && customer.isDeleted()) {
+                position++;
+                continue;
+            }
+
+            customers.add(customer);
             position++;
         }
         return customers;
@@ -75,18 +85,31 @@ public class CustomerStorageHandler extends StorageHandler {
         String      name        = file.readUTF().trim();
         Integer     age         = file.readInt();
         Integer     countryId   = file.readInt();
-        return new Customer(customerIndex.rfc, name, age, countryId);
+        return new Customer(customerIndex.rfc, name, age, countryId, customerIndex.status);
     }
 
     public boolean update (Customer customer) {
         try {
             CustomerIndex customerIndex = indexStorageHandler.getByRFC(customer.getRFC());
+
+            if (customerIndex.isDeleted()) {
+                return false;
+            }
+
             file.seek(customerIndex.index * getRecordSize());
             file.writeUTF(StringUtils.rightpad(customer.getName(), 40));
             file.writeInt(customer.getAge());
             file.writeInt(customer.getCountryId());
             return true;
         } catch (IOException | CustomerNotFoundException e) {
+            return false;
+        }
+    }
+
+    public boolean delete (Customer customer) {
+        try {
+            return indexStorageHandler.deleteByRFC(customer.getRFC());
+        } catch (IOException e) {
             return false;
         }
     }

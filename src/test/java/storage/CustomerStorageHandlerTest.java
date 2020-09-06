@@ -294,6 +294,46 @@ public class CustomerStorageHandlerTest extends TestCase {
 
     }
 
+    public void test_delete_customer () {
+
+        System.out.println("test_save_customer");
+
+        CustomerStorageHandler storage;
+
+        Customer customer = getArrayCustomers()[0];
+
+        try {
+            storage = new CustomerStorageHandler();
+            boolean result = storage.save(customer);
+            assertTrue(result);
+
+            ArrayList<Customer> customersBeforeDelete = storage.getAll();
+            assertEquals(1, customersBeforeDelete.size());
+
+            assertEquals(1, (int) storage.totalRecords());
+
+            storage.delete(customer);
+
+            ArrayList<Customer> customers = storage.getAll();
+            assertEquals(0, customers.size());
+
+            assertEquals(1, (int) storage.totalRecords());
+
+            Customer customerFinded = storage.find(customer.getRFC());
+            assertTrue(customerFinded.isDeleted());
+
+            ArrayList<Customer> allCustomers = storage.getAll(false);
+            assertEquals(1, allCustomers.size());
+
+            storage.close();
+            storage.flush();
+        } catch (IOException e) {
+            System.out.println("No puedo acceder al archivo");
+            fail();
+        }
+
+    }
+
     private Customer[] getArrayCustomers () {
         Customer[] customers = {
                 new Customer("ABCD354356", "Emiliano Hernandez", 21, 34),

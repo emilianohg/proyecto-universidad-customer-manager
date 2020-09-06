@@ -11,6 +11,10 @@ final public class CustomerIndex {
         this.status = status;
     }
 
+    public boolean isDeleted () {
+        return status == 'E';
+    }
+
     @Override
     public String toString() {
         return "CustomerIndex{" +
