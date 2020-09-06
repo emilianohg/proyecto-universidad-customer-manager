@@ -30,4 +30,22 @@ final public class Customer {
         return countryId;
     }
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "rfc='" + rfc + '\'' +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", countryId=" + countryId +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        Customer customer = (Customer) obj;
+        return  this.name.equals(customer.getName())
+                && this.rfc.equals(customer.getRFC())
+                && this.age.equals(customer.getAge())
+                && this.countryId.equals(customer.getCountryId());
+    }
 }
