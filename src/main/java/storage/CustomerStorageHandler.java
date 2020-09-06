@@ -2,7 +2,6 @@ package storage;
 
 import domain.Customer;
 import utils.StringUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

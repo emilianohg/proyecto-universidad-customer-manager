@@ -121,14 +121,14 @@ public class CustomerStorageHandlerTest extends TestCase {
         CustomerStorageHandler storage;
 
         Customer[] customers = getArrayCustomers();
-        Customer customer4 = customers[3];
+        Customer customer = customers[customers.length - 1];
 
         try {
             storage = new CustomerStorageHandler();
             storage.save(customers);
 
-            Customer customerFinded = storage.find(customer4.getRFC());
-            assertEquals(customer4, customerFinded);
+            Customer customerFinded = storage.find(customer.getRFC());
+            assertEquals(customer, customerFinded);
 
             storage.close();
             storage.flush();
@@ -146,15 +146,15 @@ public class CustomerStorageHandlerTest extends TestCase {
         CustomerStorageHandler storage;
 
         Customer[] customers = getArrayCustomers();
-        Customer customer2 = customers[1];
+        Customer customer6 = customers[5];
 
 
         try {
             storage = new CustomerStorageHandler();
             storage.save(customers);
 
-            Customer customerFinded = storage.find(customer2.getRFC());
-            assertEquals(customer2, customerFinded);
+            Customer customerFinded = storage.find(customer6.getRFC());
+            assertEquals(customer6, customerFinded);
 
             storage.close();
             storage.flush();
@@ -211,21 +211,17 @@ public class CustomerStorageHandlerTest extends TestCase {
 
         CustomerStorageHandler storage;
 
-        Customer customer1 = getArrayCustomers()[0];
-        Customer customer2 = getArrayCustomers()[1];
-        Customer customer3 = getArrayCustomers()[2];
-        Customer customer4 = getArrayCustomers()[3];
+        Customer[] customers = getArrayCustomers();
 
         try {
             storage = new CustomerStorageHandler();
-            storage.save(customer1);
-            storage.save(customer2);
-            storage.save(customer3);
-            storage.save(customer4);
+            storage.save(customers);
+            ArrayList<Customer> customersList = storage.getAll();
 
-            ArrayList<Customer> customers = storage.getAll();
-            System.out.println(customers.size());
-            customers.forEach(customer -> System.out.println(customer));
+            customersList.forEach(customer -> System.out.println(customer));
+
+            assertEquals((long) storage.totalRecords(), customersList.size());
+
 
             storage.close();
             storage.flush();
@@ -339,7 +335,17 @@ public class CustomerStorageHandlerTest extends TestCase {
                 new Customer("ABCD354356", "Emiliano Hernandez", 21, 34),
                 new Customer("FGM32DM31M", "Juan Perez", 12, 31),
                 new Customer("H4G32DM3AS", "Pedro Fernandez", 53, 34),
-                new Customer("32D2SF4M3W", "Gabriela Rodriguez", 21, 33),
+                new Customer("HFR2SF233W", "Usuario 4", 21, 33),
+                new Customer("1245SF4M3W", "Usuario 5", 21, 33),
+                new Customer("KOW2345M3W", "Usuario 6", 21, 33),
+                new Customer("JJU79S0DII", "Usuario 7", 21, 33),
+                new Customer("8JD2SF4M3W", "Usuario 8", 21, 33),
+                new Customer("3DS2SF4M3W", "Usuario 9", 21, 33),
+                new Customer("ZZZ2SF4DDD", "Usuario 10", 21, 33),
+                new Customer("AAA2SFSD3W", "Usuario 11", 21, 33),
+                new Customer("ADE2SF4M3W", "Usuario 12", 21, 33),
+                new Customer("KJUBUF4M3W", "Usuario 13", 21, 33),
+                new Customer("SBYWEF4M3W", "Usuario 14", 21, 33),
         };
 
         return customers;

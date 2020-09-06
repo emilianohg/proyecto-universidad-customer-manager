@@ -2,7 +2,6 @@ package storage;
 
 import domain.Customer;
 import utils.StringUtils;
-
 import java.io.IOException;
 
 public class CustomerIndexStorageHandler extends StorageHandler{
@@ -83,13 +82,28 @@ public class CustomerIndexStorageHandler extends StorageHandler{
         if (totalRecords() == 0)
             throw new CustomerNotFoundException();
 
-        long position = 0;
-        CustomerIndex record = getByPosition(position);
-        while (!record.rfc.equals(rfc)) {
-            if (position >= totalRecords() - 1)
-                throw new CustomerNotFoundException();
-            record = getByPosition(++position);
+        long position = -1, lowPosition = 0, highPosition = totalRecords() - 1;
+
+        CustomerIndex record;
+
+        while (lowPosition <= highPosition) {
+            long mid = (lowPosition + highPosition) / 2;
+            record = getByPosition(mid);
+
+            if (record.rfc.compareTo(rfc) < 0) {
+                lowPosition = mid + 1;
+            } else if (record.rfc.compareTo(rfc) > 0) {
+                highPosition = mid - 1;
+            } else if (record.rfc.equals(rfc)) {
+                position = mid;
+                break;
+            }
         }
+
+        if (position == -1) {
+            throw new CustomerNotFoundException();
+        }
+
         return position;
     }
 
@@ -107,6 +121,4 @@ public class CustomerIndexStorageHandler extends StorageHandler{
         Character   status  = file.readChar();
         return new CustomerIndex(rfc, index, status);
     }
-
-
 }
