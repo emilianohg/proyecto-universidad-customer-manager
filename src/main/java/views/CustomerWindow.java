@@ -11,6 +11,7 @@ public class CustomerWindow extends JFrame {
     public CustomerWindow(String title) {
         super(title);
         makeLayout(title);
+        makeActions();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -25,17 +26,23 @@ public class CustomerWindow extends JFrame {
         setLocationRelativeTo(null);
 
         JLabel lblTitle = new JLabel(title);
-        add(lblTitle, BorderLayout.PAGE_START);
+        add(lblTitle, BorderLayout.NORTH);
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(4, 2, 10, 10));
 
         inputRFC        = new JTextField();
-        inputName       = new JTextField();
-        inputAge        = new JTextField();
-        inputCountryId  = new JTextField();
+        inputRFC.addKeyListener(new InputMask(InputMask.LETTERS_AND_NUMBERS_ONLY, 10));
 
-        GridBagConstraints gbc = new GridBagConstraints();
+        inputName       = new JTextField();
+        inputName.addKeyListener(new InputMask(InputMask.LETTERS_ONLY, 40));
+
+        inputAge        = new JTextField();
+        inputAge.addKeyListener(new InputMask(InputMask.NUMBERS_ONLY));
+
+        inputCountryId  = new JTextField();
+        inputCountryId.addKeyListener(new InputMask(InputMask.NUMBERS_ONLY));
+
         formPanel.add(new JLabel("RFC:"));
         formPanel.add(inputRFC);
 
@@ -67,6 +74,17 @@ public class CustomerWindow extends JFrame {
 
         add(formButtonPanel, BorderLayout.SOUTH);
 
+    }
+
+    private void makeActions () {
+        btnCreate.addActionListener(action -> {
+            String rfc          = inputRFC.getText();
+            String name         = inputName.getText();
+            String age          = inputAge.getText();
+            String countryId    = inputCountryId.getText();
+
+            System.out.println(rfc);
+        });
     }
 
 

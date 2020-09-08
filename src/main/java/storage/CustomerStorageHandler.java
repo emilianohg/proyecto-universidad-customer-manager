@@ -26,6 +26,10 @@ public class CustomerStorageHandler extends StorageHandler {
 
     public boolean save (Customer customer) {
         try {
+            Customer customerFinded = find(customer.getRFC());
+            if (customerFinded != null)
+                return false;
+
             int index = totalRecords();
 
             file.seek(file.length());
@@ -69,12 +73,17 @@ public class CustomerStorageHandler extends StorageHandler {
         return customers;
     }
 
-    public Customer find (String rfc) throws IOException, CustomerNotFoundException {
-        CustomerIndex customerIndex = indexStorageHandler.getByRFC(rfc);
+    public Customer find (String rfc) throws IOException {
+        CustomerIndex customerIndex;
+        try {
+            customerIndex = indexStorageHandler.getByRFC(rfc);
+        } catch (CustomerNotFoundException e) {
+            return null;
+        }
         return getCustomer(customerIndex);
     }
 
-    public Customer find (long index) throws IOException, CustomerNotFoundException {
+    public Customer find (long index) throws IOException {
         CustomerIndex customerIndex = indexStorageHandler.getByPosition(index);
         return getCustomer(customerIndex);
     }

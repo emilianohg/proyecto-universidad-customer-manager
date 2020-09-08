@@ -176,13 +176,11 @@ public class CustomerStorageHandlerTest extends TestCase {
         try {
             storage = new CustomerStorageHandler();
             storage.save(customer);
-            storage.find("dededede");
-            fail();
+            Customer customerFinded = storage.find("dededede");
+            assertNull(customerFinded);
         } catch (IOException e) {
             System.out.println("No puedo acceder al archivo");
             fail();
-        } catch (CustomerNotFoundException e) {
-            assertTrue(true);
         }
 
     }
@@ -195,13 +193,11 @@ public class CustomerStorageHandlerTest extends TestCase {
 
         try {
             storage = new CustomerStorageHandler();
-            storage.find("dededede");
-            fail();
+            Customer customerFinded = storage.find("dededede");
+            assertNull(customerFinded);
         } catch (IOException e) {
             System.out.println("No puedo acceder al archivo");
             fail();
-        } catch (CustomerNotFoundException e) {
-            assertTrue(true);
         }
 
     }
@@ -218,7 +214,7 @@ public class CustomerStorageHandlerTest extends TestCase {
             storage.save(customers);
             ArrayList<Customer> customersList = storage.getAll();
 
-            customersList.forEach(customer -> System.out.println(customer));
+            customersList.forEach(System.out::println);
 
             assertEquals((long) storage.totalRecords(), customersList.size());
 
