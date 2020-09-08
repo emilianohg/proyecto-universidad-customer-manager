@@ -73,27 +73,23 @@ public class CustomerStorageHandler extends StorageHandler {
         return customers;
     }
 
-    public Customer find (String rfc) throws IOException {
+    public Customer find (String rfc) {
         CustomerIndex customerIndex;
         try {
             customerIndex = indexStorageHandler.getByRFC(rfc);
-        } catch (CustomerNotFoundException e) {
+            return getCustomer(customerIndex);
+        } catch (CustomerNotFoundException | IOException e) {
             return null;
         }
-        return getCustomer(customerIndex);
     }
 
-    public Customer find (long index) throws IOException {
-        CustomerIndex customerIndex = indexStorageHandler.getByPosition(index);
-        return getCustomer(customerIndex);
-    }
-
-    private Customer getCustomer (CustomerIndex customerIndex) throws IOException {
-        file.seek(customerIndex.index * getRecordSize());
-        String      name        = file.readUTF().trim();
-        Integer     age         = file.readInt();
-        Integer     countryId   = file.readInt();
-        return new Customer(customerIndex.rfc, name, age, countryId, customerIndex.status);
+    public Customer find (long index) {
+        try {
+            CustomerIndex customerIndex = indexStorageHandler.getByPosition(index);
+            return getCustomer(customerIndex);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public boolean update (Customer customer) {
@@ -114,9 +110,22 @@ public class CustomerStorageHandler extends StorageHandler {
         }
     }
 
-    public boolean delete (Customer customer) {
+    private Customer getCustomer (CustomerIndex customerIndex) {
         try {
-            return indexStorageHandler.deleteByRFC(customer.getRFC());
+            file.seek(customerIndex.index * getRecordSize());
+            String      name        = file.readUTF().trim();
+            Integer     age         = file.readInt();
+            Integer     countryId   = file.readInt();
+            return new Customer(customerIndex.rfc, name, age, countryId, customerIndex.status);
+        } catch (IOException e) {
+            return null;
+        }
+
+    }
+
+    public boolean delete (String rfc) {
+        try {
+            return indexStorageHandler.deleteByRFC(rfc);
         } catch (IOException e) {
             return false;
         }

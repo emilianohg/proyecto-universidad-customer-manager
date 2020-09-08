@@ -304,7 +304,7 @@ public class CustomerStorageHandlerTest extends TestCase {
 
             assertEquals(1, (int) storage.totalRecords());
 
-            storage.delete(customer);
+            storage.delete(customer.getRFC());
 
             ArrayList<Customer> customers = storage.getAll();
             assertEquals(0, customers.size());

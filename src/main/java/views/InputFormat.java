@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class InputMask implements KeyListener {
+public class InputFormat implements KeyListener {
 
     public static final String NUMBERS_ONLY = "NUMBERS_ONLY";
     public static final String LETTERS_ONLY = "LETTERS_ONLY";
@@ -14,24 +14,17 @@ public class InputMask implements KeyListener {
     private final String filterCharacters;
     private final int maxLength;
 
-    public InputMask(String filterCharacters, int maxLength) {
+    public InputFormat(String filterCharacters, int maxLength) {
         this.filterCharacters = filterCharacters;
         this.maxLength = maxLength;
     }
 
-    public InputMask(int maxLength) {
-        this.filterCharacters = ALL_CHARACTERS;
-        this.maxLength = maxLength;
+    public InputFormat(int maxLength) {
+        this(ALL_CHARACTERS, maxLength);
     }
 
-    public InputMask(String filterCharacters) {
-        this.filterCharacters = filterCharacters;
-        this.maxLength = -1;
-    }
-
-    public InputMask() {
-        this.filterCharacters = ALL_CHARACTERS;
-        this.maxLength = -1;
+    public InputFormat(String filterCharacters) {
+        this(filterCharacters, -1);
     }
 
     @Override
@@ -39,7 +32,7 @@ public class InputMask implements KeyListener {
         JTextField  input       = (JTextField) keyEvent.getSource();
         char        character   = keyEvent.getKeyChar();
 
-        if (this.maxLength != -1 && input.getText().length() > this.maxLength)
+        if (this.maxLength != -1 && input.getText().length() >= this.maxLength)
             keyEvent.consume();
 
         if (!isCharacterValid(character)) {
