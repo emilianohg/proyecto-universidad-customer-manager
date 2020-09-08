@@ -39,7 +39,7 @@ public class CustomerWindow extends JFrame {
 
     private void makeLayout (String title) {
         setSize(300, 375);
-        setResizable(true);
+        setResizable(false);
         setLocationRelativeTo(null);
 
         JPanel panel = (JPanel) getContentPane();
@@ -281,7 +281,8 @@ public class CustomerWindow extends JFrame {
         });
 
         btnIndex.addActionListener(action -> {
-
+            CustomerTableWindow tableWindow = new CustomerTableWindow();
+            tableWindow.setVisible(true);
         });
     }
 
