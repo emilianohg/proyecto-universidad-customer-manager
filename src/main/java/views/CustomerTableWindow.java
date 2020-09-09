@@ -19,10 +19,11 @@ public class CustomerTableWindow extends JFrame {
         setLocationRelativeTo(null);
         setSize(400, 300);
         setResizable(false);
+        setIconImage(new ImageIcon("src/main/resources/book.png").getImage());
 
         try {
             storage = new CustomerStorageHandler();
-            ArrayList<Customer> customers = storage.getAll(false);
+            ArrayList<Customer> customers = storage.getAll();
 
             String[] titles = {"RFC", "Nombre", "Edad", "ID Ciudad"};
             DefaultTableModel tableModel = new DefaultTableModel(titles, 0);

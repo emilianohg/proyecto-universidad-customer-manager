@@ -43,6 +43,7 @@ public class CustomerWindow extends JFrame {
         setSize(300, 375);
         setResizable(false);
         setLocationRelativeTo(null);
+        setIconImage(new ImageIcon("src/main/resources/book.png").getImage());
 
         JPanel panel = (JPanel) getContentPane();
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));

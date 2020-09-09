@@ -55,18 +55,13 @@ public class InputFormat implements KeyListener {
                 status = true;
                 break;
             case NUMBERS_ONLY:
-                status = (character >= '0' && character <= '9');
+                status = Character.isDigit(character);
                 break;
             case LETTERS_ONLY:
-                status = (character >= 'a' && character <= 'z')
-                    || (character >= 'A' && character <= 'Z')
-                    || character == 32;
+                status = Character.isLetter(character);
                 break;
             case LETTERS_AND_NUMBERS_ONLY:
-                status = (character >= 'a' && character <= 'z')
-                    || (character >= 'A' && character <= 'Z')
-                    || (character >= '0' && character <= '9')
-                    || character == 32;
+                status = Character.isLetter(character) || Character.isDigit(character);
                 break;
         }
 
