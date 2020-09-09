@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.IOException;
 
+import static domain.CustomerFormValidator.RFC_LENGTH;
+
 public class CustomerWindow extends JFrame {
 
     private final Font fontTitle = new Font("Verdana", Font.PLAIN, 20);
@@ -54,7 +56,7 @@ public class CustomerWindow extends JFrame {
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
 
         inputRFC        = new JTextField();
-        inputRFC.addKeyListener(new InputFormat(InputFormat.LETTERS_AND_NUMBERS_ONLY, 10));
+        inputRFC.addKeyListener(new InputFormat(InputFormat.LETTERS_AND_NUMBERS_ONLY, RFC_LENGTH));
 
         inputName       = new JTextField();
         inputName.addKeyListener(new InputFormat(InputFormat.LETTERS_ONLY, 40));
@@ -123,167 +125,151 @@ public class CustomerWindow extends JFrame {
 
     private void makeActions () {
         btnCreate.addActionListener(action -> {
-            if (!CustomerFormValidator.valid(
-                    inputRFC.getText(),
-                    inputName.getText(),
-                    inputAge.getText(),
-                    inputCountryId.getText()
-            )) {
+            Customer customer = getCustomer();
+
+            if (customer == null) {
+                alert("Precaucion", "Complete el formulario correctamente", "warning");
                 return;
             }
 
-            String rfc          = inputRFC.getText();
-            String name         = inputName.getText();
-            int age             = Integer.parseInt(inputAge.getText());
-            int countryId       = Integer.parseInt(inputCountryId.getText());
+            Customer customerFinded = storage.find(customer.getRFC());
 
-            Customer customer = new Customer(rfc, name, age, countryId);
+            if (customerFinded != null) {
+                alert("Ocurrio un error", String.format("ya existe un cliente con RFC %s registrado.", customer.getRFC()), "error");
+                return;
+            }
+
             boolean saved = storage.save(customer);
 
             if (!saved) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        String.format("No se puede guardar el cliente con el RFC %s.", rfc),
-                        "Ocurrio un error",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                alert("Ocurrio un error", String.format("No se puede guardar el cliente con RFC %s.", customer.getRFC()), "error");
+                return;
             }
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Cliente guardado con exito",
-                    "Guardado",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-
+            alert("Guardado", "Cliente guardado con exito");
+            resetForm();
         });
 
         btnShow.addActionListener(action -> {
             String rfc          = inputRFC.getText();
 
-            if (rfc.length() == 0)
+            if (rfc.length() != RFC_LENGTH)
                 return;
 
             Customer customer = storage.find(rfc);
 
             if (customer == null) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        String.format("No se encontro el cliente con el RFC %s.", rfc),
-                        "Ocurrio un error",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                alert("Ocurrio un error", String.format("No se encontro el cliente con RFC %s.", rfc), "error");
                 return;
             }
 
             if (customer.isDeleted()) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        String.format("El cliente con RFC %s esta eliminado", rfc),
-                        "Ocurrio un error",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                alert("Precaucion", String.format("El cliente con RFC %s ya esta eliminado", rfc), "warning");
                 return;
             }
 
             inputName.setText(customer.getName());
             inputAge.setText(Integer.toString(customer.getAge()));
             inputCountryId.setText(Integer.toString(customer.getCountryId()));
-
         });
 
         btnDelete.addActionListener(action -> {
             String rfc          = inputRFC.getText();
-            if (rfc.length() == 0)
+
+            if (rfc.length() != RFC_LENGTH)
                 return;
 
             Customer customer = storage.find(rfc);
 
             if (customer == null) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        String.format("El usuario con RFC %s no esta registrado.", rfc),
-                        "Ocurrio un error",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                alert("Precaucion", String.format("El usuario con RFC %s no esta registrado.", rfc), "warning");
                 return;
             }
 
             boolean deleted = storage.delete(rfc);
 
             if (!deleted) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        String.format("No se puede eliminar el cliente con el RFC %s.", rfc),
-                        "Ocurrio un error",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                alert("Precaucion", String.format("No se puede eliminar el cliente con el RFC %s.", rfc), "warning");
                 return;
             }
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Cliente eliminado con exito",
-                    "Guardado",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+            alert("Eliminado","Cliente eliminado con exito");
+            resetForm();
         });
 
         btnUpdate.addActionListener(action -> {
+            Customer customer = getCustomer();
 
-            if (!CustomerFormValidator.valid(
-                    inputRFC.getText(),
-                    inputName.getText(),
-                    inputAge.getText(),
-                    inputCountryId.getText()
-            )) {
+            if (customer == null) {
+                alert("Precaucion", "Complete el formulario correctamente", "warning");
                 return;
             }
 
-            String rfc          = inputRFC.getText();
-            String name         = inputName.getText();
-            int age             = Integer.parseInt(inputAge.getText());
-            int countryId       = Integer.parseInt(inputCountryId.getText());
-
-            Customer customerFinded = storage.find(rfc);
-
+            Customer customerFinded = storage.find(customer.getRFC());
 
             if (customerFinded == null) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        String.format("El usuario con RFC %s no esta registrado.", rfc),
-                        "Ocurrio un error",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                alert("Ocurrio un error", String.format("El usuario con RFC %s no esta registrado.", customer.getRFC()), "error");
                 return;
             }
 
             if (customerFinded.isDeleted()) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        String.format("El cliente con RFC %s esta eliminado", rfc),
-                        "Ocurrio un error",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                alert("Precaucion", String.format("El cliente con RFC %s esta eliminado", customer.getRFC()), "warning");
                 return;
             }
 
-            Customer customer = new Customer(rfc, name, age, countryId);
             storage.update(customer);
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Cliente actualizado con exito",
-                    "Actualizado",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-
+            alert("Actualizado","Cliente actualizado con exito");
+            resetForm();
         });
 
         btnIndex.addActionListener(action -> {
             CustomerTableWindow tableWindow = new CustomerTableWindow();
             tableWindow.setVisible(true);
         });
+    }
+
+    private Customer getCustomer () {
+        if (!CustomerFormValidator.valid(
+                inputRFC.getText(),
+                inputName.getText(),
+                inputAge.getText(),
+                inputCountryId.getText()
+        )) {
+            return null;
+        }
+
+        String rfc          = inputRFC.getText();
+        String name         = inputName.getText();
+        int age             = Integer.parseInt(inputAge.getText());
+        int countryId       = Integer.parseInt(inputCountryId.getText());
+
+        return new Customer(rfc, name, age, countryId);
+    }
+
+    private void resetForm () {
+        inputRFC.setText("");
+        inputName.setText("");
+        inputAge.setText("");
+        inputCountryId.setText("");
+    }
+
+    private void alert (String title, String message, String type) {
+        int option = JOptionPane.INFORMATION_MESSAGE;
+        switch (type.toLowerCase()) {
+            case "error":
+                option = JOptionPane.ERROR_MESSAGE;
+                break;
+            case "warning":
+                option = JOptionPane.WARNING_MESSAGE;
+                break;
+            case "question":
+                option = JOptionPane.QUESTION_MESSAGE;
+        }
+        JOptionPane.showMessageDialog(this, message, title, option);
+    }
+
+    private void alert (String title, String message) {
+        alert(title, message, "");
     }
 
 }
