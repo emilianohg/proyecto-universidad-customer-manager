@@ -9,6 +9,7 @@ public class InputFormat implements KeyListener {
     public static final String NUMBERS_ONLY = "NUMBERS_ONLY";
     public static final String LETTERS_ONLY = "LETTERS_ONLY";
     public static final String LETTERS_AND_NUMBERS_ONLY = "LETTERS_AND_NUMBERS_ONLY";
+    public static final String LETTERS_AND_NUMBERS_WITHOUT_SPACE = "LETTERS_AND_NUMBERS_WITHOUT_SPACE";
     public static final String ALL_CHARACTERS = "ALL_CHARACTERS";
 
     private final String filterCharacters;
@@ -58,10 +59,16 @@ public class InputFormat implements KeyListener {
                 status = Character.isDigit(character);
                 break;
             case LETTERS_ONLY:
-                status = Character.isLetter(character);
+                status = Character.isLetter(character) || Character.isSpaceChar(character);
+                break;
+            case LETTERS_AND_NUMBERS_WITHOUT_SPACE:
+                status =   Character.isLetter(character)
+                        || Character.isDigit(character);
                 break;
             case LETTERS_AND_NUMBERS_ONLY:
-                status = Character.isLetter(character) || Character.isDigit(character);
+                status =   Character.isLetter(character)
+                        || Character.isSpaceChar(character)
+                        || Character.isDigit(character);
                 break;
         }
 

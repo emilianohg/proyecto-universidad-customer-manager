@@ -7,11 +7,13 @@ import storage.CustomerStorageHandler;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 
 import static domain.CustomerFormValidator.RFC_LENGTH;
 
-public class CustomerWindow extends JFrame {
+public class CustomerWindow extends JFrame implements WindowListener {
 
     private final Font fontTitle = new Font("Verdana", Font.PLAIN, 20);
 
@@ -24,7 +26,7 @@ public class CustomerWindow extends JFrame {
         super(title);
         makeLayout(title);
         makeActions();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        addWindowListener(this);
         setVisible(true);
 
         try {
@@ -55,7 +57,7 @@ public class CustomerWindow extends JFrame {
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
 
         inputRFC        = new JTextField();
-        inputRFC.addKeyListener(new InputFormat(InputFormat.LETTERS_AND_NUMBERS_ONLY, RFC_LENGTH));
+        inputRFC.addKeyListener(new InputFormat(InputFormat.LETTERS_AND_NUMBERS_WITHOUT_SPACE, RFC_LENGTH));
 
         inputName       = new JTextField();
         inputName.addKeyListener(new InputFormat(InputFormat.LETTERS_ONLY, 40));
@@ -274,5 +276,33 @@ public class CustomerWindow extends JFrame {
     private void alert (String title, String message) {
         alert(title, message, "");
     }
+
+    @Override
+    public void windowOpened(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent event) {
+        storage.close();
+        this.dispose();
+    }
+
+    @Override
+    public void windowClosed(WindowEvent windowEvent) {
+        System.exit(0);
+    }
+
+    @Override
+    public void windowIconified(WindowEvent windowEvent) {  }
+
+    @Override
+    public void windowDeiconified(WindowEvent windowEvent) {  }
+
+    @Override
+    public void windowActivated(WindowEvent windowEvent) {  }
+
+    @Override
+    public void windowDeactivated(WindowEvent windowEvent) {  }
 
 }
