@@ -152,8 +152,10 @@ public class CustomerWindow extends JFrame {
         btnShow.addActionListener(action -> {
             String rfc          = inputRFC.getText();
 
-            if (rfc.length() != RFC_LENGTH)
+            if (rfc.length() != RFC_LENGTH) {
+                alert("Precaucion", "Complete el formulario correctamente", "warning");
                 return;
+            }
 
             Customer customer = storage.find(rfc);
 
@@ -175,8 +177,10 @@ public class CustomerWindow extends JFrame {
         btnDelete.addActionListener(action -> {
             String rfc          = inputRFC.getText();
 
-            if (rfc.length() != RFC_LENGTH)
+            if (rfc.length() != RFC_LENGTH) {
+                alert("Precaucion", "Complete el formulario correctamente", "warning");
                 return;
+            }
 
             Customer customer = storage.find(rfc);
 
