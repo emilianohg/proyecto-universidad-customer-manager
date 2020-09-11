@@ -16,8 +16,8 @@ public class CustomerTableWindow extends JFrame {
 
     CustomerTableWindow () {
         super("Listado de usuarios");
-        setLocationRelativeTo(null);
         setSize(400, 300);
+        setLocationRelativeTo(null);
         setResizable(true);
         setIconImage(new ImageIcon("src/main/resources/book.png").getImage());
 
