@@ -29,9 +29,7 @@ public class CustomerWindow extends JFrame {
 
         try {
             storage = new CustomerStorageHandler();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        } catch (IOException ignored) {  }
 
     }
 

@@ -19,7 +19,7 @@ public class CustomerIndexStorageHandler extends StorageHandler{
         return 18;
     }
 
-    public boolean save (Customer customer, Integer indexRegistered) {
+    public boolean save (Customer customer, int indexRegistered) {
         try {
             file.seek(file.length());
             file.writeUTF(StringUtils.rightpad(customer.getRFC(), 10));
@@ -117,7 +117,7 @@ public class CustomerIndexStorageHandler extends StorageHandler{
     public CustomerIndex getByPosition(long position) throws IOException {
         file.seek(position * getRecordSize());
         String      rfc     = file.readUTF();
-        Integer     index   = file.readInt();
+        int         index   = file.readInt();
         Character   status  = file.readChar();
         return new CustomerIndex(rfc, index, status);
     }

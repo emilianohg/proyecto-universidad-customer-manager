@@ -26,7 +26,7 @@ public abstract class StorageHandler {
         return true;
     }
 
-    public Integer totalRecords () throws IOException {
+    public int totalRecords () throws IOException {
         return (int) file.length() / getRecordSize();
     }
 

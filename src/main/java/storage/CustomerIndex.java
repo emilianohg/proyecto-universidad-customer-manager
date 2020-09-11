@@ -2,10 +2,10 @@ package storage;
 
 final public class CustomerIndex {
     final public String     rfc;
-    final public Integer    index;
+    final public int        index;
     final public Character  status;
 
-    public CustomerIndex(String rfc, Integer index, Character status) {
+    public CustomerIndex(String rfc, int index, Character status) {
         this.rfc    = rfc;
         this.index  = index;
         this.status = status;

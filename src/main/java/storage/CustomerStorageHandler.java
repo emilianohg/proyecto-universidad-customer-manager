@@ -114,8 +114,8 @@ public class CustomerStorageHandler extends StorageHandler {
         try {
             file.seek(customerIndex.index * getRecordSize());
             String      name        = file.readUTF().trim();
-            Integer     age         = file.readInt();
-            Integer     countryId   = file.readInt();
+            int         age         = file.readInt();
+            int         countryId   = file.readInt();
             return new Customer(customerIndex.rfc, name, age, countryId, customerIndex.status);
         } catch (IOException e) {
             return null;

@@ -4,11 +4,11 @@ final public class Customer {
 
     final private String    rfc;
     final private String    name;
-    final private Integer   age;
-    final private Integer   countryId;
+    final private int       age;
+    final private int       countryId;
     final private Character status;
 
-    public Customer (String rfc, String name, Integer age, Integer countryId, Character status) {
+    public Customer (String rfc, String name, int age, int countryId, Character status) {
         this.rfc        = rfc;
         this.name       = name;
         this.age        = age;
@@ -16,7 +16,7 @@ final public class Customer {
         this.status     = status;
     }
 
-    public Customer (String rfc, String name, Integer age, Integer countryId) {
+    public Customer (String rfc, String name, int age, int countryId) {
         this(rfc, name, age, countryId, 'A');
     }
 
@@ -28,11 +28,11 @@ final public class Customer {
         return name;
     }
 
-    public Integer getAge () {
+    public int getAge () {
         return age;
     }
 
-    public Integer getCountryId() {
+    public int getCountryId() {
         return countryId;
     }
 
@@ -56,7 +56,7 @@ final public class Customer {
         Customer customer = (Customer) obj;
         return  this.name.equals(customer.getName())
                 && this.rfc.equals(customer.getRFC())
-                && this.age.equals(customer.getAge())
-                && this.countryId.equals(customer.getCountryId());
+                && this.age == customer.getAge()
+                && this.countryId == customer.getCountryId();
     }
 }
