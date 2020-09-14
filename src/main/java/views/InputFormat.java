@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 public class InputFormat implements KeyListener {
 
     public static final String NUMBERS_ONLY = "NUMBERS_ONLY";
+    public static final String RFC = "RFC";
     public static final String LETTERS_ONLY = "LETTERS_ONLY";
     public static final String LETTERS_AND_NUMBERS_ONLY = "LETTERS_AND_NUMBERS_ONLY";
     public static final String LETTERS_AND_NUMBERS_WITHOUT_SPACE = "LETTERS_AND_NUMBERS_WITHOUT_SPACE";
@@ -61,7 +62,7 @@ public class InputFormat implements KeyListener {
             case LETTERS_ONLY:
                 status = Character.isLetter(character) || Character.isSpaceChar(character);
                 break;
-            case LETTERS_AND_NUMBERS_WITHOUT_SPACE:
+            case RFC:
                 status =   Character.isLetter(character)
                         || Character.isDigit(character);
                 break;
@@ -71,6 +72,9 @@ public class InputFormat implements KeyListener {
                         || Character.isDigit(character);
                 break;
         }
+
+        if (filterCharacters.equals(RFC) && (character == 'ñ' || character == 'Ñ'))
+            status = false;
 
         return status;
     }

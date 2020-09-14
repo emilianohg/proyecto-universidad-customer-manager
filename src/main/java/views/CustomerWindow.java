@@ -57,7 +57,7 @@ public class CustomerWindow extends JFrame implements WindowListener {
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
 
         inputRFC        = new JTextField();
-        inputRFC.addKeyListener(new InputFormat(InputFormat.LETTERS_AND_NUMBERS_WITHOUT_SPACE, RFC_LENGTH));
+        inputRFC.addKeyListener(new InputFormat(InputFormat.RFC, RFC_LENGTH));
 
         inputName       = new JTextField();
         inputName.addKeyListener(new InputFormat(InputFormat.LETTERS_ONLY, 40));
