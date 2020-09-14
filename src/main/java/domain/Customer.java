@@ -9,7 +9,7 @@ final public class Customer {
     final private Character status;
 
     public Customer (String rfc, String name, int age, int countryId, Character status) {
-        this.rfc        = rfc;
+        this.rfc        = rfc.toUpperCase();
         this.name       = name;
         this.age        = age;
         this.countryId  = countryId;
